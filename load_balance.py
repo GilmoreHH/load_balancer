@@ -144,6 +144,7 @@ def connect_to_salesforce(start_date=None, end_date=None):
                 NameInsured.Account_Manager__r.Name
             FROM InsurancePolicy
             WHERE ExpirationDate != null
+            AND Status != 'Cancelled'
             {date_filter}
             ORDER BY ExpirationDate DESC
             LIMIT 10000
