@@ -691,8 +691,3 @@ else:
     - Ensure the InsurancePolicy object is accessible in your Salesforce org
     - Verify the Account_Manager__c field exists on the Account object
     """)
-# — Debug: show all PolicyType values
-st.sidebar.write(
-    "🔍 Unique PolicyTypes:",
-    df['PolicyType'].dropna().unique()
-)
