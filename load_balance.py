@@ -45,7 +45,7 @@ def get_workload_category(count, thresholds):
 # Define core policy types
 def get_core_policy_types():
     """Return a list of core policy types for analysis."""
-    return ["Auto", "Flood", "Homeowners", "Umbrella"]
+    return ["Personal Auto", "Commercial Auto", "Flood", "Flood - CL", "Flood - PL", "Homeowners", "Umbrella"]
 
 # Function to get current ISO week
 def get_current_iso_week():
@@ -97,7 +97,6 @@ def connect_to_salesforce(start_date=None, end_date=None):
                 Account_Manager__r.Name
             FROM Account
             WHERE Account_Manager__c != null
-            LIMIT 10000
         """
 
         account_manager_map = {}
@@ -147,7 +146,7 @@ def connect_to_salesforce(start_date=None, end_date=None):
             AND Status != 'Cancelled'
             {date_filter}
             ORDER BY ExpirationDate DESC
-            LIMIT 10000
+           
         """
 
         try:
@@ -336,6 +335,8 @@ else:
     if start_date > end_date:
         st.sidebar.error("Start date must be before or equal to end date.")
         start_date, end_date = end_date, start_date
+
+
 
 # View options
 view_by = st.sidebar.radio(
@@ -614,11 +615,12 @@ if not df.empty:
         df_core = df[df['PolicyType'].isin(core_lines)]
 
         if not df_core.empty:
-            # Apply weighting: Flood = 0.5, others = 1.0
+            # Apply weighting: Flood-CL and Flood-PL = 0.5, others = 1.0
             df_core_workload = df_core.copy()
             df_core_workload['WeightedCount'] = df_core_workload['PolicyType'].apply(
-                lambda x: 0.5 if x == 'Flood' else 1.0
-            )
+            lambda x: 0.5 if x in ['Flood', 'Flood - CL', 'Flood - PL'] else 1.0
+        )
+
 
             # Group by Account Manager and Policy Type
             workload_summary = df_core_workload.groupby(['AccountManager', 'PolicyType']).agg({
@@ -642,7 +644,7 @@ if not df.empty:
                 manager_totals.head(15),
                 x="AccountManager",
                 y="WeightedCount",
-                title="Core Lines Weighted Workload by Account Manager (Flood = 0.5 weight)",
+                title="Core Lines Weighted Workload by Account Manager (Flood - CL/Flood - PL = 0.5 weight)",
                 color="WeightedCount",
                 color_continuous_scale="Viridis"
             )
@@ -652,11 +654,29 @@ if not df.empty:
             # Detailed breakdown
             if show_data_table:
                 st.subheader("📊 Core Lines Workload Summary")
-                manager_totals['Workload Reduction'] = manager_totals['Count'] - manager_totals['WeightedCount']
-                manager_totals.columns = ['Account Manager', 'Total Policies', 'Weighted Total', 'Workload Reduction']
-                st.dataframe(manager_totals, use_container_width=True)
                 
-                st.info("📊 **Example:** If a manager has 200 Flood + 200 Auto policies → Weighted Total = 350 (200×0.5 + 200×1.0)")
+                # Show aggregated manager totals
+                manager_display = manager_totals.copy()
+                manager_display['Workload Reduction'] = manager_display['Count'] - manager_display['WeightedCount']
+                manager_display.columns = ['Account Manager', 'Total Policies', 'Weighted Total', 'Workload Reduction']
+                st.dataframe(manager_display, use_container_width=True)
+                
+                # Show detailed breakdown by policy type
+                st.subheader("📋 Detailed Policy Type Breakdown")
+                policy_breakdown = workload_summary.pivot_table(
+                    index='AccountManager', 
+                    columns='PolicyType', 
+                    values='Count', 
+                    fill_value=0
+                ).reset_index()
+                
+                # Add total column
+                policy_breakdown['Total'] = policy_breakdown.iloc[:, 1:].sum(axis=1)
+                policy_breakdown = policy_breakdown.sort_values('Total', ascending=False)
+                
+                st.dataframe(policy_breakdown, use_container_width=True)
+    
+    st.info("📊 **Example:** If a manager has 200 Flood - CL + 200 Auto policies → Weighted Total = 350 (200×0.5 + 200×1.0)")
 
     # Show full raw data option
     with st.expander("🔍 View Raw Policy Data", expanded=False):
@@ -671,3 +691,8 @@ else:
     - Ensure the InsurancePolicy object is accessible in your Salesforce org
     - Verify the Account_Manager__c field exists on the Account object
     """)
+# — Debug: show all PolicyType values
+st.sidebar.write(
+    "🔍 Unique PolicyTypes:",
+    df['PolicyType'].dropna().unique()
+)
