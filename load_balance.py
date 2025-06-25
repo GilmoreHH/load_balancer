@@ -143,7 +143,7 @@ def connect_to_salesforce(start_date=None, end_date=None):
                 NameInsured.Account_Manager__r.Name
             FROM InsurancePolicy
             WHERE ExpirationDate != null
-            AND Status != 'Cancelled'
+            AND Status IN ('Active', 'Renewing', 'Pending Cancellation', 'Non-Renewal', 'Reinstating', 'Reinstated')
             {date_filter}
             ORDER BY ExpirationDate DESC
            
