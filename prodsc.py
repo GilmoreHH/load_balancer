@@ -10,8 +10,10 @@ import requests
 from typing import Dict, List, Tuple
 from dotenv import load_dotenv
 
+
 # Load environment variables
 load_dotenv()
+
 
 # Page configuration
 st.set_page_config(
@@ -21,17 +23,18 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Modern Enhanced Custom CSS
+
+# Modern Enhanced Custom CSS with Asymmetrical Cards and Producer-specific styling
 st.markdown("""
 <style>
     /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
+   
     /* Global Styles */
     .main > div {
         font-family: 'Inter', sans-serif;
     }
-    
+   
     /* Custom CSS Variables */
     :root {
         --primary-color: #6366f1;
@@ -51,7 +54,7 @@ st.markdown("""
         --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    
+   
     /* Main Header */
     .main-header {
         font-size: 3rem;
@@ -64,7 +67,7 @@ st.markdown("""
         margin-bottom: 2rem;
         letter-spacing: -0.025em;
     }
-    
+   
     /* Section Headers */
     .section-header {
         font-size: 1.875rem;
@@ -75,7 +78,7 @@ st.markdown("""
         border-bottom: 3px solid var(--primary-color);
         position: relative;
     }
-    
+   
     .section-header::after {
         content: '';
         position: absolute;
@@ -85,8 +88,8 @@ st.markdown("""
         height: 3px;
         background: linear-gradient(90deg, var(--accent-color) 0%, var(--success-color) 100%);
     }
-    
-    /* Modern Metric Cards */
+   
+    /* Modern Metric Cards with Asymmetrical Heights */
     .metric-card {
         background: var(--card-bg);
         padding: 1.5rem;
@@ -98,7 +101,14 @@ st.markdown("""
         position: relative;
         overflow: hidden;
     }
-    
+   
+    .metric-card:nth-child(1) { min-height: 120px; }
+    .metric-card:nth-child(2) { min-height: 140px; }
+    .metric-card:nth-child(3) { min-height: 160px; }
+    .metric-card:nth-child(4) { min-height: 130px; }
+    .metric-card:nth-child(5) { min-height: 150px; }
+    .metric-card:nth-child(6) { min-height: 125px; }
+   
     .metric-card::before {
         content: '';
         position: absolute;
@@ -108,13 +118,13 @@ st.markdown("""
         height: 4px;
         background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
     }
-    
+   
     .metric-card:hover {
         transform: translateY(-2px);
         box-shadow: var(--shadow-lg);
     }
-    
-    /* Premium Text Metrics */
+   
+    /* Premium Text Metrics with Asymmetrical Heights */
     .text-metric {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -127,7 +137,11 @@ st.markdown("""
         overflow: hidden;
         transition: all 0.3s ease;
     }
-    
+   
+    .text-metric:nth-child(1) { min-height: 180px; }
+    .text-metric:nth-child(2) { min-height: 200px; }
+    .text-metric:nth-child(3) { min-height: 220px; }
+   
     .text-metric::before {
         content: '';
         position: absolute;
@@ -140,40 +154,182 @@ st.markdown("""
         transition: all 0.5s ease;
         opacity: 0;
     }
-    
+   
     .text-metric:hover::before {
         opacity: 1;
         top: -100%;
         left: -100%;
     }
-    
+   
     .text-metric:hover {
         transform: translateY(-4px) scale(1.02);
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     }
-    
+   
     .text-metric h3 {
         margin: 0;
         font-size: 2.5em;
         font-weight: 700;
         letter-spacing: -0.025em;
     }
-    
+   
     .text-metric p {
         margin: 0.5rem 0 0 0;
         font-size: 1.1em;
         opacity: 0.95;
         font-weight: 500;
     }
-    
+   
+    /* Producer-specific gradient overview cards */
+    .producer-overview-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 20px;
+        margin: 1rem 0;
+        box-shadow: var(--shadow-xl);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        min-height: 200px;
+    }
+   
+    .producer-overview-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+        transform: rotate(-45deg);
+        transition: all 0.5s ease;
+        opacity: 0;
+    }
+   
+    .producer-overview-card:hover::before {
+        opacity: 1;
+        top: -100%;
+        right: -100%;
+    }
+   
+    .producer-overview-card:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+   
+    .producer-overview-card h2 {
+        margin: 0 0 1rem 0;
+        font-size: 2.2em;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+   
+    .producer-metric {
+        display: inline-block;
+        margin: 0.5rem 1rem 0.5rem 0;
+        padding: 0.5rem 1rem;
+        background: rgba(255,255,255,0.2);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+    }
+   
+    .producer-metric-value {
+        font-size: 1.8em;
+        font-weight: 700;
+        display: block;
+    }
+   
+    .producer-metric-label {
+        font-size: 0.9em;
+        opacity: 0.9;
+        display: block;
+    }
+   
+    /* Specialty sections with enhanced styling */
+    .specialty-section {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 16px;
+        margin: 1rem 0;
+        box-shadow: var(--shadow-lg);
+        position: relative;
+        overflow: hidden;
+    }
+   
+    .specialty-section h3 {
+        margin: 0 0 1rem 0;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+   
+    .specialty-item {
+        background: rgba(255,255,255,0.2);
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        backdrop-filter: blur(10px);
+    }
+   
+    .specialty-name {
+        font-weight: 500;
+    }
+   
+    .specialty-value {
+        font-weight: 700;
+        font-size: 1.1em;
+    }
+   
+    /* Performance containers with asymmetrical heights */
+    .performance-container {
+        background: var(--card-bg);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+        margin: 1rem 0;
+        transition: all 0.3s ease;
+    }
+   
+    .performance-container:nth-child(odd) { min-height: 400px; }
+    .performance-container:nth-child(even) { min-height: 450px; }
+   
+    .performance-container:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+   
+    /* Chart Containers with Asymmetrical Heights */
+    .chart-container {
+        background: var(--card-bg);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+        margin: 1rem 0;
+        transition: all 0.3s ease;
+    }
+   
+    .chart-container:nth-child(odd) { min-height: 450px; }
+    .chart-container:nth-child(even) { min-height: 500px; }
+   
+    .chart-container:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+   
     /* Modern Sidebar */
-    .sidebar .stSelectbox label, .sidebar .stMultiSelect label, 
+    .sidebar .stSelectbox label, .sidebar .stMultiSelect label,
     .sidebar .stSlider label, .sidebar .stCheckbox label {
         font-weight: 600 !important;
         color: var(--text-primary) !important;
         font-size: 0.9rem !important;
     }
-    
+   
     .sidebar .stButton button {
         background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
         border: none !important;
@@ -182,100 +338,12 @@ st.markdown("""
         padding: 0.75rem 1.5rem !important;
         transition: all 0.3s ease !important;
     }
-    
+   
     .sidebar .stButton button:hover {
         transform: translateY(-2px) !important;
         box-shadow: var(--shadow-lg) !important;
     }
-    
-    /* Producer Tab Cards */
-    .producer-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        box-shadow: var(--shadow-md);
-        transition: all 0.3s ease;
-        position: relative;
-    }
-    
-    .producer-card:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--primary-color);
-    }
-    
-    .producer-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 2px solid var(--border-color);
-    }
-    
-    .producer-avatar {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 700;
-        font-size: 1.2rem;
-        margin-right: 1rem;
-    }
-    
-    .producer-name {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin: 0;
-    }
-    
-    .producer-id {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        margin: 0.25rem 0 0 0;
-    }
-    
-    /* Performance Indicators */
-    .performance-indicator {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        margin: 0.25rem;
-    }
-    
-    .indicator-high {
-        background-color: #dcfce7;
-        color: #166534;
-    }
-    
-    .indicator-medium {
-        background-color: #fef3c7;
-        color: #92400e;
-    }
-    
-    .indicator-low {
-        background-color: #fee2e2;
-        color: #991b1b;
-    }
-    
-    /* Chart Containers */
-    .chart-container {
-        background: var(--card-bg);
-        border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: var(--shadow-md);
-        border: 1px solid var(--border-color);
-        margin: 1rem 0;
-    }
-    
+   
     /* Tab Styling */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
@@ -283,7 +351,7 @@ st.markdown("""
         border-radius: 12px;
         padding: 4px;
     }
-    
+   
     .stTabs [data-baseweb="tab"] {
         background-color: transparent;
         border-radius: 8px;
@@ -292,40 +360,66 @@ st.markdown("""
         border: none;
         transition: all 0.3s ease;
     }
-    
+   
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
         color: white !important;
         box-shadow: var(--shadow-md);
     }
-    
+   
+    /* Producer tab styling */
+    .producer-tab {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white !important;
+    }
+   
+    /* Debug info styling */
+    .debug-info {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+   
+    /* Recent policies table styling */
+    .recent-policies {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+    }
+   
     /* Responsive Design */
     @media (max-width: 768px) {
         .main-header {
             font-size: 2rem;
         }
-        
-        .text-metric {
+       
+        .text-metric, .producer-overview-card {
             padding: 1.5rem;
+            min-height: auto;
         }
-        
-        .text-metric h3 {
+       
+        .text-metric h3, .producer-overview-card h2 {
             font-size: 2rem;
         }
-    }
-    
-    /* Dark mode support */
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --card-bg: #374151;
-            --light-bg: #1f2937;
-            --text-primary: #f9fafb;
-            --text-secondary: #d1d5db;
-            --border-color: #4b5563;
+        
+        .producer-metric {
+            display: block;
+            margin: 0.5rem 0;
+        }
+        
+        .chart-container, .performance-container {
+            min-height: auto;
         }
     }
 </style>
 """, unsafe_allow_html=True)
+
 
 # Helper functions
 @st.cache_data
@@ -343,195 +437,29 @@ def get_stage_metadata():
         'Closed Lost': {'category': 'Lost'},
     }
 
-@st.cache_data
-def get_business_type_categories():
-    """Return business type categories mapping."""
-    return {
-        'Auto': 'Personal Lines',
-        'Home': 'Personal Lines',
-        'Umbrella': 'Personal Lines',
-        'General Liability': 'Commercial Lines',
-        'Property': 'Commercial Lines',
-        'Workers Comp': 'Commercial Lines',
-        'Commercial Auto': 'Commercial Lines',
-    }
-
-def map_lob(picklist_val):
-    """Map LOB picklist values to categories."""
-    lob_mapping = {
-        'Auto': 'Personal Auto',
-        'Home': 'Personal Property',
-        'Umbrella': 'Personal Umbrella',
-        'General Liability': 'Commercial Liability',
-        'Property': 'Commercial Property',
-        'Workers Comp': 'Commercial WC',
-        'Commercial Auto': 'Commercial Auto',
-    }
-    return lob_mapping.get(picklist_val, 'Other')
-
-# Producer Management System
-@st.cache_data
-def initialize_producer_registry():
-    """Initialize the producer registry with ID mapping."""
-    return {
-        'producers': {},
-        'id_mapping': {},
-        'last_updated': datetime.now()
-    }
-
-def get_account_managers_from_salesforce(sf):
-    """Get account managers using the correct Account Manager query."""
-    try:
-        # First get the Account Manager IDs from Accounts
-        account_manager_query = """
-            SELECT Id, Name, InternalUserId, InternalUser.FirstName, InternalUser.LastName 
-            FROM Producer 
-            WHERE Id IN (
-                SELECT Account_Manager__c 
-                FROM Account 
-                WHERE Account_Manager__c != null
-            )
-        """
-        
-        results = sf.query_all(account_manager_query)
-        
-        account_managers = {}
-        for rec in results['records']:
-            producer_id = rec['Id']
-            producer_name = rec['Name']
-            internal_user_id = rec.get('InternalUserId', '')
-            
-            # Get internal user details if available
-            internal_user = rec.get('InternalUser', {})
-            first_name = internal_user.get('FirstName', '') if internal_user else ''
-            last_name = internal_user.get('LastName', '') if internal_user else ''
-            full_internal_name = f"{first_name} {last_name}".strip() if first_name or last_name else ''
-            
-            account_managers[producer_id] = {
-                'id': producer_id,
-                'name': producer_name,
-                'internal_user_id': internal_user_id,
-                'internal_user_name': full_internal_name,
-                'first_name': first_name,
-                'last_name': last_name
-            }
-        
-        return account_managers
-        
-    except Exception as e:
-        st.error(f"Error fetching account managers: {e}")
-        return {}
-
-def get_producer_names(sf, producer_ids):
-    """Enhanced producer name fetching with account manager data."""
-    if not producer_ids:
-        return {}
-
-    # Get or initialize producer registry
-    if 'producer_registry' not in st.session_state:
-        st.session_state.producer_registry = initialize_producer_registry()
-
-    # Check cache first
-    registry = st.session_state.producer_registry
-    cached_producers = {}
-    uncached_ids = []
-
-    for prod_id in producer_ids:
-        if prod_id in registry['id_mapping']:
-            cached_producers[prod_id] = registry['id_mapping'][prod_id]['name']
-        else:
-            uncached_ids.append(prod_id)
-
-    # Fetch uncached producers using the account manager query
-    if uncached_ids:
-        # Get all account managers first
-        all_account_managers = get_account_managers_from_salesforce(sf)
-        
-        # Filter for the ones we need
-        for prod_id in uncached_ids:
-            if prod_id in all_account_managers:
-                manager_data = all_account_managers[prod_id]
-                prod_name = manager_data['name']
-                
-                # Update registry with enhanced data
-                registry['producers'][prod_name] = {
-                    'id': prod_id,
-                    'name': prod_name,
-                    'internal_user_id': manager_data['internal_user_id'],
-                    'internal_user_name': manager_data['internal_user_name'],
-                    'first_name': manager_data['first_name'],
-                    'last_name': manager_data['last_name'],
-                    'performance_data': {},
-                    'created_date': datetime.now(),
-                    'is_account_manager': True
-                }
-                
-                registry['id_mapping'][prod_id] = {
-                    'name': prod_name,
-                    'internal_user_id': manager_data['internal_user_id'],
-                    'internal_user_name': manager_data['internal_user_name'],
-                    'is_account_manager': True
-                }
-                
-                cached_producers[prod_id] = prod_name
-
-    # Update session state
-    st.session_state.producer_registry = registry
-    
-    return cached_producers
-
-def get_producer_performance_summary(df, producer_name):
-    """Calculate performance metrics for a producer."""
-    producer_data = df[df['Producer'] == producer_name]
-    
-    if producer_data.empty:
-        return {
-            'total_opportunities': 0,
-            'lob_diversity': 0,
-            'top_lob': 'N/A',
-            'performance_level': 'low'
-        }
-    
-    total_opps = producer_data['Count'].sum()
-    lob_count = len(producer_data['LOB_Category'].unique())
-    top_lob = producer_data.groupby('LOB_Category')['Count'].sum().idxmax()
-    
-    # Determine performance level
-    if total_opps >= 50:
-        performance_level = 'high'
-    elif total_opps >= 20:
-        performance_level = 'medium'
-    else:
-        performance_level = 'low'
-    
-    return {
-        'total_opportunities': total_opps,
-        'lob_diversity': lob_count,
-        'top_lob': top_lob,
-        'performance_level': performance_level
-    }
 
 def format_datetime_for_salesforce(dt):
     """Format datetime for Salesforce SOQL queries - always returns datetime format."""
     if dt is None:
         return None
-    
+   
     # If it's a date object, convert to datetime at start of day
     if hasattr(dt, 'date') and not hasattr(dt, 'hour'):
         dt = datetime.combine(dt, datetime.min.time())
-    
+   
     # If it's already a datetime, use as is
     elif not hasattr(dt, 'hour'):
         # It's a date object
         dt = datetime.combine(dt, datetime.min.time())
-    
+   
     return dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + 'Z'
+
 
 def format_date_as_datetime_for_salesforce(dt):
     """Format date as datetime for Salesforce SOQL queries - specifically for date fields that need datetime format."""
     if dt is None:
         return None
-    
+   
     # Convert date to datetime
     if hasattr(dt, 'date') and not hasattr(dt, 'hour'):
         # It's a date object
@@ -539,14 +467,15 @@ def format_date_as_datetime_for_salesforce(dt):
     elif not hasattr(dt, 'hour'):
         # It's a date object  
         dt = datetime.combine(dt, datetime.min.time())
-    
+   
     return dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + 'Z'
+
 
 def format_end_date_as_datetime_for_salesforce(dt):
     """Format end date as datetime for Salesforce SOQL queries - end of day."""
     if dt is None:
         return None
-    
+   
     # Convert date to datetime at end of day
     if hasattr(dt, 'date') and not hasattr(dt, 'hour'):
         # It's a date object
@@ -554,8 +483,9 @@ def format_end_date_as_datetime_for_salesforce(dt):
     elif not hasattr(dt, 'hour'):
         # It's a date object
         dt = datetime.combine(dt, datetime.max.time())
-    
+   
     return dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + 'Z'
+
 
 # Salesforce connection functions
 def get_salesforce_connection():
@@ -573,6 +503,304 @@ def get_salesforce_connection():
         st.error(f"❌ Salesforce connection failed: {str(e)}")
         st.info("Please check your environment variables: SF_USERNAME_PRO, SF_PASSWORD_PRO, SF_SECURITY_TOKEN_PRO")
         return None
+
+
+def get_available_producers(sf):
+    """Get all available producers from Salesforce."""
+    try:
+        producer_query = """
+            SELECT Name
+            FROM Producer
+            ORDER BY Name
+        """
+        
+        producer_results = sf.query_all(producer_query)
+        producer_names = [record['Name'] for record in producer_results['records']]
+        return producer_names
+        
+    except Exception as e:
+        st.error(f"Error fetching producers: {str(e)}")
+        return []
+
+
+def get_producer_ids_from_names(sf, producer_names):
+    """Convert producer names to Producer record IDs for lookup field filtering."""
+    try:
+        if not producer_names:
+            return []
+       
+        # Create a safe query string for producer names
+        name_conditions = []
+        for name in producer_names:
+            # Escape single quotes in names
+            safe_name = name.replace("'", "\\'")
+            name_conditions.append(f"Name = '{safe_name}'")
+       
+        producer_query = f"""
+            SELECT Id, Name
+            FROM Producer
+            WHERE {' OR '.join(name_conditions)}
+        """
+       
+        producer_results = sf.query_all(producer_query)
+        producer_ids = [record['Id'] for record in producer_results['records']]
+       
+        return producer_ids
+       
+    except Exception as e:
+        st.error(f"Error fetching producer IDs: {str(e)}")
+        return []
+
+
+def get_insurance_policy_data(sf, start_date, end_date, producer_filter=None):
+    """Get Insurance Policy data with optional producer filtering."""
+    try:
+        start_date_str = format_date_as_datetime_for_salesforce(start_date)
+        end_date_str = format_end_date_as_datetime_for_salesforce(end_date)
+       
+        # Base filters matching the Salesforce report
+        base_filters = [
+            f"EffectiveDate >= {start_date_str}",
+            f"EffectiveDate <= {end_date_str}",
+            "Status = 'Active'",
+            "Business_Type_Reporting__c = 'New Business'"
+        ]
+       
+        # Producer filter - handle both Producer and Producer_2__c fields
+        producer_where_clause = ""
+        if producer_filter and len(producer_filter) > 0:
+            # First, get Producer IDs from Producer names
+            producer_ids = get_producer_ids_from_names(sf, producer_filter)
+           
+            if producer_ids:
+                producer_conditions = []
+                for producer_id in producer_ids:
+                    # Check both ProducerId and Producer_2__c custom lookup fields using IDs
+                    producer_conditions.append(f"(ProducerId = '{producer_id}' OR Producer_2__c = '{producer_id}')")
+                producer_where_clause = f"AND ({' OR '.join(producer_conditions)})"
+            else:
+                # If no producer IDs found, also try name-based filtering as fallback
+                name_conditions = []
+                for name in producer_filter:
+                    safe_name = name.replace("'", "\\'")
+                    name_conditions.append(f"(Producer.Name = '{safe_name}' OR Producer_2__r.Name = '{safe_name}')")
+                if name_conditions:
+                    producer_where_clause = f"AND ({' OR '.join(name_conditions)})"
+        
+        # Get Insurance Policy data
+        policy_query = f"""
+            SELECT
+                Id,
+                Name,
+                PolicyName,
+                ProducerId,
+                Producer.Name,
+                Producer_2__c,
+                Producer_2__r.Name,
+                PolicyType,
+                WritingCarrierAccount.Name,
+                Total_Policy_Premium__c,
+                PremiumAmount,
+                TaxesSurcharges,
+                EffectiveDate,
+                NameInsuredId,
+                NameInsured.Name
+            FROM InsurancePolicy
+            WHERE {' AND '.join(base_filters)}
+            {producer_where_clause}
+            ORDER BY EffectiveDate DESC
+        """
+       
+        policy_results = sf.query_all(policy_query)
+        policy_df = pd.DataFrame(policy_results['records'])
+       
+        if policy_df.empty:
+            return pd.DataFrame()
+       
+        # Clean up the policy data
+        policy_df = policy_df.drop('attributes', axis=1, errors='ignore')
+       
+        # Handle nested fields safely - improved version
+        def safe_get_nested_field(row, field_path):
+            try:
+                if '.' in field_path:
+                    parts = field_path.split('.')
+                    current = row
+                    for part in parts:
+                        if isinstance(current, dict) and part in current:
+                            current = current[part]
+                        else:
+                            return ''
+                    return current if current is not None else ''
+                else:
+                    return row.get(field_path, '') if row.get(field_path) is not None else ''
+            except:
+                return ''
+       
+        # Create column mappings
+        policy_df['PolicyNumber'] = policy_df['Name']
+        policy_df['PolicyName'] = policy_df['PolicyName']
+       
+        # Producer Identifier - improved logic to handle different data structures
+        def get_producer_name(row):
+            # Try Producer.Name first
+            producer_name = safe_get_nested_field(row, 'Producer.Name')
+            if producer_name:
+                return producer_name
+                
+            # Try Producer_2__r.Name
+            producer2_name = safe_get_nested_field(row, 'Producer_2__r.Name')
+            if producer2_name:
+                return producer2_name
+                
+            # Try direct access to nested structures
+            if isinstance(row.get('Producer'), dict) and row.get('Producer', {}).get('Name'):
+                return row['Producer']['Name']
+                
+            if isinstance(row.get('Producer_2__r'), dict) and row.get('Producer_2__r', {}).get('Name'):
+                return row['Producer_2__r']['Name']
+                
+            return 'Unknown Producer'
+        
+        policy_df['ProducerIdentifier'] = policy_df.apply(get_producer_name, axis=1)
+       
+        policy_df['PolicyType'] = policy_df['PolicyType']
+       
+        # Writing Carrier Account Name
+        policy_df['WritingCarrierName'] = policy_df.apply(lambda row:
+            safe_get_nested_field(row, 'WritingCarrierAccount.Name'), axis=1)
+       
+        policy_df['TotalPolicyPremium'] = policy_df['Total_Policy_Premium__c']
+       
+        # Account Name
+        policy_df['AccountName'] = policy_df.apply(lambda row:
+            safe_get_nested_field(row, 'NameInsured.Name'), axis=1)
+       
+        # Convert dates
+        policy_df['EffectiveDate'] = pd.to_datetime(policy_df['EffectiveDate'])
+       
+        # Convert premiums to numeric
+        policy_df['PremiumAmount'] = pd.to_numeric(policy_df['PremiumAmount'], errors='coerce').fillna(0)
+        policy_df['TaxesSurcharges'] = pd.to_numeric(policy_df['TaxesSurcharges'], errors='coerce').fillna(0)
+        policy_df['TotalPolicyPremium'] = pd.to_numeric(policy_df['TotalPolicyPremium'], errors='coerce')
+       
+        # If TotalPolicyPremium is null, calculate it
+        policy_df['TotalPolicyPremium'] = policy_df['TotalPolicyPremium'].fillna(
+            policy_df['PremiumAmount'] + policy_df['TaxesSurcharges']
+        )
+       
+        # Select final columns to return
+        final_columns = [
+            'PolicyNumber', 'PolicyName', 'ProducerIdentifier', 'PolicyType',
+            'WritingCarrierName', 'TotalPolicyPremium', 'PremiumAmount',
+            'TaxesSurcharges', 'EffectiveDate', 'AccountName', 'NameInsuredId'
+        ]
+       
+        return policy_df[final_columns]
+       
+    except Exception as e:
+        st.error(f"Error fetching insurance policy data: {str(e)}")
+        return pd.DataFrame()
+
+
+def get_external_referrer_data(sf, start_date, end_date, producer_filter=None):
+    """Get external referrer data with optional producer filtering."""
+    try:
+        start_date_str = format_date_as_datetime_for_salesforce(start_date)
+        end_date_str = format_end_date_as_datetime_for_salesforce(end_date)
+       
+        # Base filters
+        base_filters = [
+            f"EffectiveDate >= {start_date_str}",
+            f"EffectiveDate <= {end_date_str}",
+            "Status = 'Active'",
+            "Business_Type_Reporting__c = 'New Business'",
+            "NameInsuredId != null"
+        ]
+        
+        # Producer filter
+        producer_where_clause = ""
+        if producer_filter and len(producer_filter) > 0:
+            producer_ids = get_producer_ids_from_names(sf, producer_filter)
+            if producer_ids:
+                producer_conditions = []
+                for producer_id in producer_ids:
+                    producer_conditions.append(f"(ProducerId = '{producer_id}' OR Producer_2__c = '{producer_id}')")
+                producer_where_clause = f"AND ({' OR '.join(producer_conditions)})"
+       
+        # Get policies with optional producer filtering
+        policy_query = f"""
+            SELECT
+                Id,
+                NameInsuredId
+            FROM InsurancePolicy
+            WHERE {' AND '.join(base_filters)}
+            {producer_where_clause}
+        """
+       
+        policy_results = sf.query_all(policy_query)
+        if not policy_results['records']:
+            return pd.DataFrame()
+       
+        policy_df = pd.DataFrame(policy_results['records'])
+        account_ids = policy_df['NameInsuredId'].dropna().unique().tolist()
+       
+        if not account_ids:
+            return pd.DataFrame()
+       
+        # Get Account data with external referrers
+        account_sources = [
+            'Boat Dealer', 'Employee Referral', 'Existing Client',
+            'Financial Advisor / Estate Planner', 'Friend or Relative',
+            'Influencer', 'Inspector', 'Lender', 'MM Lead', 'Marina',
+            'Organically Prospected', 'Other', 'Other Insurance Agent', 'Realtor'
+        ]
+        account_source_list = ','.join([f"'{source}'" for source in account_sources])
+       
+        # Split account IDs into chunks
+        account_chunks = [account_ids[i:i+200] for i in range(0, len(account_ids), 200)]
+        account_data = []
+       
+        for chunk in account_chunks:
+            account_ids_str = ','.join([f"'{acc_id}'" for acc_id in chunk])
+           
+            account_query = f"""
+                SELECT
+                    Id,
+                    FinServ__ReferredByContact__r.Name
+                FROM Account
+                WHERE Id IN ({account_ids_str})
+                AND FinServ__ReferredByContact__c != null
+                AND AccountSource IN ({account_source_list})
+            """
+           
+            account_results = sf.query_all(account_query)
+            if account_results['records']:
+                account_data.extend(account_results['records'])
+       
+        if not account_data:
+            return pd.DataFrame()
+       
+        # Create referrer DataFrame
+        referrer_data = []
+        for record in account_data:
+            if record.get('FinServ__ReferredByContact__r') and record['FinServ__ReferredByContact__r'].get('Name'):
+                referrer_name = record['FinServ__ReferredByContact__r']['Name']
+                referrer_data.append({
+                    'AccountId': record['Id'],
+                    'ReferredByContactName': referrer_name
+                })
+       
+        if not referrer_data:
+            return pd.DataFrame()
+       
+        referrer_df = pd.DataFrame(referrer_data)
+        return referrer_df
+       
+    except Exception as e:
+        st.error(f"Error fetching external referrer data: {str(e)}")
+        return pd.DataFrame()
+
 
 def get_new_quote_requests(sf, start_date, end_date):
     """Get new quote requests data."""
@@ -592,6 +820,7 @@ def get_new_quote_requests(sf, start_date, end_date):
     except Exception as e:
         st.error(f"Error fetching new quote requests: {str(e)}")
         return pd.DataFrame()
+
 
 def get_prior_month_opportunity_status_enhanced(sf):
     """Get opportunity status for prior month with enhanced data."""
@@ -614,7 +843,7 @@ def get_prior_month_opportunity_status_enhanced(sf):
 
         data = []
         total_count = sum([record['oppCount'] for record in results['records']])
-        
+       
         for record in results['records']:
             stage_name = record['StageName']
             count = record['oppCount']
@@ -632,21 +861,22 @@ def get_prior_month_opportunity_status_enhanced(sf):
     except Exception as e:
         st.error(f"Error fetching opportunity status: {str(e)}")
         return pd.DataFrame()
-    
+   
+
 def create_modern_doughnut_chart(df):
     """Create a modern doughnut chart with enhanced styling."""
     if df.empty:
         return None
-    
+   
     # Modern color palette
     colors = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#84cc16', '#f97316']
-    
+   
     fig = go.Figure(data=[go.Pie(
         labels=df['StageName'],
         values=df['Count'],
         hole=0.5,
         marker=dict(
-            colors=colors[:len(df)], 
+            colors=colors[:len(df)],
             line=dict(color='#ffffff', width=3)
         ),
         textinfo='label+percent',
@@ -654,7 +884,7 @@ def create_modern_doughnut_chart(df):
         textfont=dict(size=12, family="Inter, sans-serif"),
         hovertemplate='<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>'
     )])
-    
+   
     fig.update_layout(
         title=dict(
             text="Prior Month Opportunity Status",
@@ -663,10 +893,10 @@ def create_modern_doughnut_chart(df):
         ),
         showlegend=True,
         legend=dict(
-            orientation="v", 
-            yanchor="middle", 
-            y=0.5, 
-            xanchor="left", 
+            orientation="v",
+            yanchor="middle",
+            y=0.5,
+            xanchor="left",
             x=1.05,
             font=dict(size=11, family="Inter, sans-serif")
         ),
@@ -674,108 +904,41 @@ def create_modern_doughnut_chart(df):
         plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(t=50, b=50, l=50, r=150)
     )
-    
+   
     return fig    
 
-def get_top_referral_sources(sf):
-    """Get top 10 referral sources from prior month."""
-    try:
-        end_date = datetime.now()
-        start_date = end_date - timedelta(days=30)
-       
-        start_date_str = start_date.strftime('%Y-%m-%dT00:00:00Z')
-        end_date_str = end_date.strftime('%Y-%m-%dT23:59:59Z')
-       
-        query = f"""
-            SELECT LeadSource, COUNT(Id) oppCount
-            FROM Opportunity
-            WHERE CreatedDate >= {start_date_str} AND CreatedDate <= {end_date_str}
-            AND LeadSource != null
-            GROUP BY LeadSource
-            ORDER BY COUNT(Id) DESC
-            LIMIT 10
-        """
-       
-        results = sf.query_all(query)
-        return pd.DataFrame(results['records'])
-    except Exception as e:
-        st.error(f"Error fetching referral sources: {str(e)}")
+
+def get_top_external_referrers(referrer_df):
+    """Get top 10 external referrers from external referrer data."""
+    if referrer_df.empty:
         return pd.DataFrame()
-
-def get_rolling_4_weeks_premium(sf, start_date=None, end_date=None):
-    """Get rolling premium with optional date filter."""
+   
     try:
-        if start_date is None or end_date is None:
-            # Default to last 4 weeks
-            end_date = datetime.now().date()
-            start_date = end_date - timedelta(weeks=4)
-
-        # Format dates as datetime for Salesforce SOQL
-        start_date_str = format_date_as_datetime_for_salesforce(start_date)
-        end_date_str = format_end_date_as_datetime_for_salesforce(end_date)
-
-        query = f"""
-            SELECT PremiumAmount, EffectiveDate
-            FROM InsurancePolicy
-            WHERE EffectiveDate >= {start_date_str} AND EffectiveDate <= {end_date_str}
-            AND PremiumAmount != null
-            ORDER BY EffectiveDate
-        """
-
-        results = sf.query_all(query)
-        df = pd.DataFrame(results['records'])
-
-        if df.empty:
+        # Get external referrer counts
+        external_referrer_counts = referrer_df['ReferredByContactName'].value_counts().head(10)
+       
+        if external_referrer_counts.empty:
             return pd.DataFrame()
-
-        # Convert EffectiveDate to datetime
-        df['EffectiveDate'] = pd.to_datetime(df['EffectiveDate'])
-
-        # Group by week
-        df['week_start'] = df['EffectiveDate'].dt.to_period('W').dt.start_time
-        weekly_df = df.groupby('week_start')['PremiumAmount'].sum().reset_index()
-        weekly_df.columns = ['week_start', 'totalPremium']
-        weekly_df['week_label'] = weekly_df['week_start'].dt.strftime('Week of %b %d')
-
-        return weekly_df
-
+       
+        # Convert to DataFrame format
+        referrer_data = []
+        for referrer_name, count in external_referrer_counts.items():
+            referrer_data.append({
+                'ExternalReferrer': referrer_name,
+                'PolicyCount': count
+            })
+       
+        result_df = pd.DataFrame(referrer_data)
+        return result_df
+       
     except Exception as e:
-        st.error(f"Error fetching rolling premium with filter: {str(e)}")
+        st.error(f"Error processing external referrers: {str(e)}")
         return pd.DataFrame()
 
-def get_qtd_premium(sf, start_date=None, end_date=None):
-    """Get premium with optional date filter (defaults to QTD)."""
-    try:
-        if start_date is None or end_date is None:
-            # Default to quarter to date
-            now = datetime.now()
-            start_date = datetime(now.year, ((now.month - 1) // 3) * 3 + 1, 1).date()
-            end_date = now.date()
-
-        # Format dates as datetime for Salesforce SOQL
-        start_date_str = format_date_as_datetime_for_salesforce(start_date)
-        end_date_str = format_end_date_as_datetime_for_salesforce(end_date)
-
-        query = f"""
-            SELECT SUM(PremiumAmount) totalPremium
-            FROM InsurancePolicy
-            WHERE EffectiveDate >= {start_date_str} AND EffectiveDate <= {end_date_str}
-            AND PremiumAmount != null
-        """
-
-        results = sf.query_all(query)
-        total = results['records'][0]['totalPremium'] if results['records'] else 0
-        return total or 0
-    except Exception as e:
-        st.error(f"Error fetching premium with filter: {str(e)}")
-        return 0
 
 def get_carrier_performance_enhanced(sf, start_date, end_date):
     """Get carrier performance with enhanced metrics and color coding."""
     try:
-        # Get stage metadata
-        stage_metadata = get_stage_metadata()
-
         # Query Carriers
         carrier_query = """
             SELECT Id, Name
@@ -856,11 +1019,365 @@ def get_carrier_performance_enhanced(sf, start_date, end_date):
         st.error(f"Error fetching carrier performance: {e}")
         return pd.DataFrame()
 
-def create_enhanced_sidebar():
+
+def get_producer_performance_data(sf, producer_name, start_date, end_date):
+    """Get comprehensive performance data for a specific producer."""
+    try:
+        # Get policy data for this specific producer
+        policy_df = get_insurance_policy_data(sf, start_date, end_date, [producer_name])
+        
+        if policy_df.empty:
+            return None
+            
+        # Filter to ensure we only get data for this producer
+        producer_policy_df = policy_df[policy_df['ProducerIdentifier'] == producer_name].copy()
+        
+        if producer_policy_df.empty:
+            return None
+        
+        # Calculate key metrics
+        total_policies = len(producer_policy_df)
+        total_premium = producer_policy_df['TotalPolicyPremium'].sum()
+        avg_premium = producer_policy_df['TotalPolicyPremium'].mean()
+        
+        # Policy type analysis
+        policy_types = producer_policy_df['PolicyType'].value_counts()
+        
+        # Premium by policy type (for specialty analysis)
+        premium_by_type = producer_policy_df.groupby('PolicyType')['TotalPolicyPremium'].sum().sort_values(ascending=False)
+        
+        # Recent policies (last 10)
+        recent_policies = producer_policy_df.nlargest(10, 'EffectiveDate')[
+            ['PolicyNumber', 'PolicyName', 'PolicyType', 'TotalPolicyPremium', 'EffectiveDate', 'AccountName']
+        ].copy()
+        
+        # Weekly trend data
+        producer_policy_df['week_start'] = producer_policy_df['EffectiveDate'].dt.to_period('W').dt.start_time
+        weekly_premium = producer_policy_df.groupby('week_start')['TotalPolicyPremium'].sum().reset_index()
+        weekly_premium['week_label'] = weekly_premium['week_start'].dt.strftime('Week of %b %d')
+        
+        # Business performance trends (top policy types)
+        top_policy_types = policy_types.head(5).index.tolist()
+        trend_data = []
+        
+        for policy_type in top_policy_types:
+            type_data = producer_policy_df[producer_policy_df['PolicyType'] == policy_type]
+            if not type_data.empty:
+                type_weekly = type_data.groupby('week_start')['TotalPolicyPremium'].sum().reset_index()
+                type_weekly['PolicyType'] = policy_type
+                trend_data.append(type_weekly)
+        
+        trend_df = pd.concat(trend_data, ignore_index=True) if trend_data else pd.DataFrame()
+        
+        # Least active business types (bottom 5 with at least 1 policy)
+        least_active_types = policy_types.tail(5)
+        
+        return {
+            'total_policies': total_policies,
+            'total_premium': total_premium,
+            'avg_premium': avg_premium,
+            'policy_types': policy_types,
+            'premium_by_type': premium_by_type,
+            'recent_policies': recent_policies,
+            'weekly_premium': weekly_premium,
+            'trend_data': trend_df,
+            'least_active_types': least_active_types,
+            'policy_df': producer_policy_df
+        }
+        
+    except Exception as e:
+        st.error(f"Error fetching producer performance data: {str(e)}")
+        return None
+
+
+def create_producer_overview_card(producer_name, producer_data):
+    """Create modern gradient overview card for producer."""
+    if not producer_data:
+        return
+        
+    st.markdown(f"""
+    <div class="producer-overview-card">
+        <h2>🎯 {producer_name}</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+            <div class="producer-metric">
+                <span class="producer-metric-value">{producer_data['total_policies']:,}</span>
+                <span class="producer-metric-label">Total Policies</span>
+            </div>
+            <div class="producer-metric">
+                <span class="producer-metric-value">${producer_data['total_premium']:,.0f}</span>
+                <span class="producer-metric-label">Total Premium</span>
+            </div>
+            <div class="producer-metric">
+                <span class="producer-metric-value">${producer_data['avg_premium']:,.0f}</span>
+                <span class="producer-metric-label">Average Premium</span>
+            </div>
+            <div class="producer-metric">
+                <span class="producer-metric-value">{len(producer_data['policy_types']):,}</span>
+                <span class="producer-metric-label">Policy Types</span>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+def create_policy_type_donut_chart(policy_types, title="Policy Type Distribution"):
+    """Create policy type distribution donut chart with percentages."""
+    if policy_types.empty:
+        return None
+        
+    colors = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#84cc16', '#f97316']
+    
+    fig = go.Figure(data=[go.Pie(
+        labels=policy_types.index,
+        values=policy_types.values,
+        hole=0.5,
+        marker=dict(
+            colors=colors[:len(policy_types)],
+            line=dict(color='#ffffff', width=3)
+        ),
+        textinfo='label+percent',
+        textposition='outside',
+        textfont=dict(size=11, family="Inter, sans-serif"),
+        hovertemplate='<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>'
+    )])
+    
+    fig.update_layout(
+        title=dict(
+            text=title,
+            x=0.5,
+            font=dict(size=16, family="Inter, sans-serif", color='#111827')
+        ),
+        showlegend=True,
+        legend=dict(
+            orientation="v",
+            yanchor="middle",
+            y=0.5,
+            xanchor="left",
+            x=1.05,
+            font=dict(size=10, family="Inter, sans-serif")
+        ),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        margin=dict(t=50, b=50, l=50, r=150),
+        height=400
+    )
+    
+    return fig
+
+
+def create_premium_specialty_donut_chart(premium_by_type, title="Premium by Specialty"):
+    """Create premium specialty donut chart."""
+    if premium_by_type.empty:
+        return None
+        
+    colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe']
+    
+    fig = go.Figure(data=[go.Pie(
+        labels=premium_by_type.index,
+        values=premium_by_type.values,
+        hole=0.5,
+        marker=dict(
+            colors=colors[:len(premium_by_type)],
+            line=dict(color='#ffffff', width=3)
+        ),
+        textinfo='label+percent',
+        textposition='outside',
+        textfont=dict(size=11, family="Inter, sans-serif"),
+        hovertemplate='<b>%{label}</b><br>Premium: $%{value:,.0f}<br>Percentage: %{percent}<extra></extra>'
+    )])
+    
+    fig.update_layout(
+        title=dict(
+            text=title,
+            x=0.5,
+            font=dict(size=16, family="Inter, sans-serif", color='#111827')
+        ),
+        showlegend=True,
+        legend=dict(
+            orientation="v",
+            yanchor="middle",
+            y=0.5,
+            xanchor="left",
+            x=1.05,
+            font=dict(size=10, family="Inter, sans-serif")
+        ),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        margin=dict(t=50, b=50, l=50, r=150),
+        height=400
+    )
+    
+    return fig
+
+
+def create_specialty_section(premium_by_type):
+    """Create top specialties section with premium breakdown."""
+    if premium_by_type.empty:
+        return
+        
+    st.markdown("""
+    <div class="specialty-section">
+        <h3>🏆 Top Specialties by Premium</h3>
+    """, unsafe_allow_html=True)
+    
+    for specialty, premium in premium_by_type.head(5).items():
+        percentage = (premium / premium_by_type.sum()) * 100
+        st.markdown(f"""
+        <div class="specialty-item">
+            <span class="specialty-name">{specialty}</span>
+            <span class="specialty-value">${premium:,.0f} ({percentage:.1f}%)</span>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+def create_business_performance_trends_chart(trend_df):
+    """Create business performance trends line chart for top policy types."""
+    if trend_df.empty:
+        return None
+        
+    fig = px.line(trend_df, 
+                  x='week_start', 
+                  y='TotalPolicyPremium',
+                  color='PolicyType',
+                  title="Business Performance Trends (Top Policy Types)",
+                  line_shape='spline')
+    
+    fig.update_traces(line=dict(width=3), marker=dict(size=6))
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font_family="Inter",
+        title_font=dict(size=16, color='#111827'),
+        xaxis_title="Week",
+        yaxis_title="Premium ($)",
+        yaxis_tickformat='$,.0f',
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        height=400
+    )
+    
+    return fig
+
+
+def create_least_active_chart(least_active_types):
+    """Create least active business types bar chart."""
+    if least_active_types.empty:
+        return None
+        
+    fig = px.bar(x=least_active_types.values,
+                 y=least_active_types.index,
+                 orientation='h',
+                 title="Least Active Business Types",
+                 color=least_active_types.values,
+                 color_continuous_scale='Reds')
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font_family="Inter",
+        title_font=dict(size=16, color='#111827'),
+        coloraxis_showscale=False,
+        xaxis_title="Policy Count",
+        yaxis_title="Policy Type",
+        height=300
+    )
+    
+    return fig
+
+
+def create_individual_producer_tab(sf, producer_name, filters):
+    """Create comprehensive individual producer tab."""
+    st.markdown(f'<div class="section-header">📊 {producer_name} Performance Dashboard</div>', unsafe_allow_html=True)
+    
+    # Get producer performance data
+    producer_data = get_producer_performance_data(sf, producer_name, filters['start_date'], filters['end_date'])
+    
+    if not producer_data:
+        st.warning(f"No data available for {producer_name} in the selected date range.")
+        return
+    
+    # Producer overview card
+    create_producer_overview_card(producer_name, producer_data)
+    
+    # First row: Policy type distribution and Premium specialty
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown('<div class="performance-container">', unsafe_allow_html=True)
+        fig = create_policy_type_donut_chart(producer_data['policy_types'])
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown('<div class="performance-container">', unsafe_allow_html=True)
+        fig = create_premium_specialty_donut_chart(producer_data['premium_by_type'])
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Top specialties section
+    create_specialty_section(producer_data['premium_by_type'])
+    
+    # Second row: Business performance trends and Least active types
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.markdown('<div class="performance-container">', unsafe_allow_html=True)
+        if not producer_data['trend_data'].empty:
+            fig = create_business_performance_trends_chart(producer_data['trend_data'])
+            if fig:
+                st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("Insufficient data for trend analysis")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown('<div class="performance-container">', unsafe_allow_html=True)
+        fig = create_least_active_chart(producer_data['least_active_types'])
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Recent policies table
+    st.markdown("### 📋 Recent Policies")
+    st.markdown('<div class="recent-policies">', unsafe_allow_html=True)
+    
+    # Format the recent policies data for display
+    recent_display = producer_data['recent_policies'].copy()
+    recent_display['TotalPolicyPremium'] = recent_display['TotalPolicyPremium'].apply(lambda x: f"${x:,.0f}")
+    recent_display['EffectiveDate'] = recent_display['EffectiveDate'].dt.strftime('%Y-%m-%d')
+    
+    st.dataframe(
+        recent_display,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            'PolicyNumber': 'Policy #',
+            'PolicyName': 'Policy Name',
+            'PolicyType': 'Type',
+            'TotalPolicyPremium': 'Premium',
+            'EffectiveDate': 'Effective Date',
+            'AccountName': 'Account'
+        }
+    )
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+def create_enhanced_sidebar(sf):
     """Create enhanced sidebar with modern styling and comprehensive filters."""
     st.sidebar.markdown('<div class="sidebar">', unsafe_allow_html=True)
     st.sidebar.header("🎛️ Dashboard Controls")
-    
+   
     # Date range selector
     st.sidebar.subheader("📅 Date Range")
     col1, col2 = st.sidebar.columns(2)
@@ -868,7 +1385,29 @@ def create_enhanced_sidebar():
         start_date = st.date_input("Start Date", datetime.now() - timedelta(days=30))
     with col2:
         end_date = st.date_input("End Date", datetime.now())
-    
+   
+    # Producer selection
+    st.sidebar.subheader("👥 Producer Selection")
+    available_producers = get_available_producers(sf)
+    selected_producers = st.sidebar.multiselect(
+        "Select Producers",
+        options=available_producers,
+        default=[]
+    )
+   
+    # Debug information
+    if available_producers:
+        st.sidebar.markdown('<div class="debug-info">', unsafe_allow_html=True)
+        st.sidebar.write(f"**Debug Info:**")
+        st.sidebar.write(f"Total available producers: {len(available_producers)}")
+        if selected_producers:
+            st.sidebar.write(f"Selected producers: {len(selected_producers)}")
+            for prod in selected_producers[:5]:  # Show first 5
+                st.sidebar.write(f"  • {prod}")
+            if len(selected_producers) > 5:
+                st.sidebar.write(f"  • ... and {len(selected_producers) - 5} more")
+        st.sidebar.markdown('</div>', unsafe_allow_html=True)
+   
     # Business type filter
     st.sidebar.subheader("🏢 Business Filters")
     business_types = st.sidebar.multiselect(
@@ -876,36 +1415,32 @@ def create_enhanced_sidebar():
         options=["Personal Lines", "Commercial Lines", "Both"],
         default=["Both"]
     )
-    
-    new_business_only = st.sidebar.checkbox("New Business Only", value=False)
-    
-    # Producer filter
-    st.sidebar.subheader("👥 Producer Filters")
-    show_top_producers = st.sidebar.slider("Show Top N Producers", 5, 20, 10)
-    
+   
+    new_business_only = st.sidebar.checkbox("New Business Only", value=True)
+   
     # Premium filters
     st.sidebar.subheader("💰 Premium Filters")
     min_premium = st.sidebar.number_input("Minimum Premium ($)", value=0, step=1000)
     max_premium = st.sidebar.number_input("Maximum Premium ($)", value=100000, step=1000)
-    
+   
     # Chart display options
     st.sidebar.subheader("📊 Display Options")
     show_percentages = st.sidebar.checkbox("Show Percentages in Charts", value=True)
     chart_theme = st.sidebar.selectbox("Chart Theme", ["plotly", "plotly_white", "plotly_dark"])
-    
+   
     # Data refresh
     st.sidebar.subheader("🔄 Data Management")
     refresh_data = st.sidebar.button("Refresh Data", type="primary")
     export_data = st.sidebar.button("Export Current View")
-    
+   
     st.sidebar.markdown('</div>', unsafe_allow_html=True)
-    
+   
     return {
         'start_date': start_date,
         'end_date': end_date,
+        'selected_producers': selected_producers,
         'business_types': business_types,
         'new_business_only': new_business_only,
-        'show_top_producers': show_top_producers,
         'min_premium': min_premium,
         'max_premium': max_premium,
         'show_percentages': show_percentages,
@@ -914,37 +1449,56 @@ def create_enhanced_sidebar():
         'export_data': export_data
     }
 
-def display_modern_text_metrics(sf, filters):
+
+def display_modern_text_metrics(df):
     """Display modern premium metrics with enhanced styling."""
-    # Rolling 4 weeks premium
-    rolling_premium = get_rolling_4_weeks_premium(sf, filters['start_date'], filters['end_date'])
-    total_rolling = rolling_premium['totalPremium'].sum() if not rolling_premium.empty else 0
-    
-    # QTD premium
-    qtd_premium = get_qtd_premium(sf, filters['start_date'], filters['end_date'])
-    
+    if df.empty:
+        total_premium = 0
+        policy_count = 0
+        avg_premium = 0
+    else:
+        total_premium = df['TotalPolicyPremium'].sum()
+        policy_count = len(df)
+        avg_premium = df['TotalPolicyPremium'].mean()
+   
     # Display as modern formatted text
-    col1, col2 = st.columns(2)
-    
+    col1, col2, col3 = st.columns(3)
+   
     with col1:
         st.markdown(f"""
         <div class="text-metric">
-            <h3>${total_rolling:,.0f}</h3>
-            <p>Rolling 4 Weeks Closed Premium</p>
+            <h3>${total_premium:,.0f}</h3>
+            <p>Total Premium Written</p>
         </div>
         """, unsafe_allow_html=True)
-    
+   
     with col2:
         st.markdown(f"""
         <div class="text-metric">
-            <h3>${qtd_premium:,.0f}</h3>
-            <p>Quarter to Date Premium</p>
+            <h3>{policy_count:,}</h3>
+            <p>Policies Issued</p>
         </div>
         """, unsafe_allow_html=True)
+   
+    with col3:
+        st.markdown(f"""
+        <div class="text-metric">
+            <h3>${avg_premium:,.0f}</h3>
+            <p>Average Premium</p>
+        </div>
+        """, unsafe_allow_html=True)
+
 
 def create_overview_tab(sf, filters):
     """Create enhanced overview tab with modern styling."""
     st.markdown('<div class="section-header">Business Overview</div>', unsafe_allow_html=True)
+
+    # Get insurance policy data with optional producer filtering
+    selected_producers = filters['selected_producers']
+    policy_df = get_insurance_policy_data(sf, filters['start_date'], filters['end_date'], selected_producers)
+    
+    # Get external referrer data with same filtering
+    referrer_df = get_external_referrer_data(sf, filters['start_date'], filters['end_date'], selected_producers)
 
     # Key metrics row with modern cards
     col1, col2, col3 = st.columns(3)
@@ -960,85 +1514,116 @@ def create_overview_tab(sf, filters):
         """, unsafe_allow_html=True)
 
     with col2:
-        referral_df = get_top_referral_sources(sf)
-        top_referral_count = referral_df.iloc[0]['oppCount'] if not referral_df.empty else 0
-        top_referral_source = referral_df.iloc[0]['LeadSource'] if not referral_df.empty else 'N/A'
+        external_referrers = get_top_external_referrers(referrer_df)
+        if not external_referrers.empty:
+            top_referrer_count = external_referrers.iloc[0]['PolicyCount']
+            top_referrer_name = external_referrers.iloc[0]['ExternalReferrer']
+        else:
+            top_referrer_count = 0
+            top_referrer_name = 'N/A'
         st.markdown(f"""
         <div class="metric-card">
-            <h3 style="margin: 0; font-size: 2rem; color: #10b981;">{top_referral_count}</h3>
-            <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-weight: 500;">Top Referral Source</p>
-            <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.9rem;">{top_referral_source}</p>
+            <h3 style="margin: 0; font-size: 2rem; color: #10b981;">{top_referrer_count}</h3>
+            <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-weight: 500;">Top External Referrer</p>
+            <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.9rem;">{top_referrer_name}</p>
         </div>
         """, unsafe_allow_html=True)
 
     with col3:
-        prior_month_df = get_prior_month_opportunity_status_enhanced(sf)
-        if not prior_month_df.empty:
-            open_opps = prior_month_df[prior_month_df['Category'] == 'Open']['Count'].sum()
+        carrier_df = get_carrier_performance_enhanced(sf, filters['start_date'], filters['end_date'])
+        if not carrier_df.empty:
+            top_carrier = carrier_df.iloc[0]['Carrier']
+            top_close_rate = carrier_df.iloc[0]['Close_Rate']
         else:
-            open_opps = 0
+            top_carrier = 'N/A'
+            top_close_rate = 0
         st.markdown(f"""
         <div class="metric-card">
-            <h3 style="margin: 0; font-size: 2rem; color: #f59e0b;">{open_opps}</h3>
-            <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-weight: 500;">Open Opportunities</p>
+            <h3 style="margin: 0; font-size: 2rem; color: #8b5cf6;">{top_close_rate:.1f}%</h3>
+            <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-weight: 500;">Top Carrier Close Rate</p>
+            <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.9rem;">{top_carrier}</p>
         </div>
         """, unsafe_allow_html=True)
 
-    # Premium Summary
-    st.markdown("### 💎 Premium Summary")
-    display_modern_text_metrics(sf, filters)
+    # Only show Premium Summary if there's policy data
+    if not policy_df.empty:
+        st.markdown("### 💎 Premium Summary")
+        display_modern_text_metrics(policy_df)
 
-    # Charts row with containers
-    col1, col2 = st.columns(2)
+        # Charts row with containers
+        col1, col2 = st.columns(2)
 
-    with col1:
-        st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        prior_month_df = get_prior_month_opportunity_status_enhanced(sf)
-        if not prior_month_df.empty:
-            fig = create_modern_doughnut_chart(prior_month_df)
-            if fig:
-                st.plotly_chart(fig, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        with col1:
+            st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+            prior_month_df = get_prior_month_opportunity_status_enhanced(sf)
+            if not prior_month_df.empty:
+                fig = create_modern_doughnut_chart(prior_month_df)
+                if fig:
+                    st.plotly_chart(fig, use_container_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
 
-    with col2:
-        st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        referral_df = get_top_referral_sources(sf)
-        if not referral_df.empty:
-            fig = px.bar(referral_df, 
-                        x='oppCount', 
-                        y='LeadSource',
-                        orientation='h', 
-                        title="Top 10 Referral Sources",
-                        color='oppCount', 
-                        color_continuous_scale='Viridis')
-            fig.update_layout(
-                plot_bgcolor='rgba(0,0,0,0)',
-                paper_bgcolor='rgba(0,0,0,0)',
-                font_family="Inter",
-                title_font=dict(size=16, color='#111827'),
-                coloraxis_showscale=False
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        with col2:
+            st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+            # Only show external referrer chart if there's referrer data
+            if not referrer_df.empty:
+                external_referrers = get_top_external_referrers(referrer_df)
+                if not external_referrers.empty:
+                    fig = px.bar(
+                        external_referrers,
+                        x='PolicyCount',
+                        y='ExternalReferrer',
+                        orientation='h',
+                        title="Top 10 External Referrers",
+                        color='PolicyCount',
+                        color_continuous_scale='Viridis'
+                    )
+                    fig.update_layout(
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        font_family="Inter",
+                        title_font=dict(size=16, color='#111827'),
+                        coloraxis_showscale=False,
+                        xaxis_title="Policy Count",
+                        yaxis_title="External Referrer"
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("No external referrer data available.")
+            else:
+                st.info("No external referrer data available.")
+            st.markdown('</div>', unsafe_allow_html=True)
+    else:
+        if selected_producers:
+            st.info(f"No policy data available for selected producers: {', '.join(selected_producers)}")
+        else:
+            st.info("No policy data available for the selected period. Please select producers from the sidebar.")
+
 
 def create_performance_tab(sf, filters):
     """Create enhanced performance tab with modern styling."""
     st.markdown('<div class="section-header">Performance Metrics</div>', unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
+    # Get insurance policy data with optional producer filtering
+    selected_producers = filters['selected_producers']
+    policy_df = get_insurance_policy_data(sf, filters['start_date'], filters['end_date'], selected_producers)
 
-    with col1:
-        st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        rolling_premium_df = get_rolling_4_weeks_premium(sf, filters['start_date'], filters['end_date'])
+    if not policy_df.empty:
+        col1, col2 = st.columns(2)
 
-        if not rolling_premium_df.empty:
-            fig = px.line(rolling_premium_df, 
-                         x='week_label', 
-                         y='totalPremium',
-                         title="Period Premium by Week",
+        with col1:
+            st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+            # Weekly premium trend
+            policy_df['week_start'] = policy_df['EffectiveDate'].dt.to_period('W').dt.start_time
+            weekly_premium = policy_df.groupby('week_start')['TotalPolicyPremium'].sum().reset_index()
+            weekly_premium['week_label'] = weekly_premium['week_start'].dt.strftime('Week of %b %d')
+
+            fig = px.line(weekly_premium,
+                         x='week_label',
+                         y='TotalPolicyPremium',
+                         title="Weekly Premium Trend",
                          line_shape='spline')
             fig.update_traces(
-                line=dict(width=4, color='#6366f1'), 
+                line=dict(width=4, color='#6366f1'),
                 marker=dict(size=8, color='#8b5cf6')
             )
             fig.update_layout(
@@ -1051,339 +1636,260 @@ def create_performance_tab(sf, filters):
                 yaxis_tickformat='$,.0f'
             )
             st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.info("No premium data available for the selected period.")
-        st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
 
-    with col2:
-        st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        carrier_df = get_carrier_performance_enhanced(sf, filters['start_date'], filters['end_date'])
-        if not carrier_df.empty:
-            fig = px.scatter(carrier_df, 
-                           x='Total_Quotes', 
-                           y='Close_Rate',
-                           size='Won_Quotes', 
-                           hover_name='Carrier',
-                           color='Close_Rate',
-                           color_continuous_scale='RdYlGn',
-                           title="Carrier Performance Analysis")
+        with col2:
+            st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+            # Enhanced carrier performance with close rates
+            carrier_df = get_carrier_performance_enhanced(sf, filters['start_date'], filters['end_date'])
             
-            fig.update_traces(marker=dict(line=dict(width=2, color='#ffffff')))
+            if not carrier_df.empty:
+                # Create scatter plot with carrier performance data
+                fig = px.scatter(carrier_df,
+                               x='Total_Quotes',
+                               y='Close_Rate',
+                               size='Won_Quotes',
+                               hover_name='Carrier',
+                               color='Close_Rate',
+                               color_continuous_scale='RdYlGn',
+                               title="Carrier Performance: Close Rate vs Volume",
+                               hover_data={
+                                   'Total_Quotes': True,
+                                   'Won_Quotes': True,
+                                   'Close_Rate': ':.1f%'
+                               })
+                
+                fig.update_traces(marker=dict(line=dict(width=2, color='#ffffff')))
+                fig.update_layout(
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    font_family="Inter",
+                    title_font=dict(size=16, color='#111827'),
+                    xaxis_title="Total Quotes",
+                    yaxis_title="Close Rate (%)",
+                    yaxis_tickformat='.1f',
+                    coloraxis_colorbar=dict(title="Close Rate (%)")
+                )
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("No carrier performance data available for the selected period.")
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        # Enhanced carrier performance table
+        if not carrier_df.empty:
+            st.markdown("### 🏆 Carrier Performance Ranking (Based on Close Rates)")
+            
+            # Format the dataframe for display
+            display_df = carrier_df.copy()
+            display_df['Close_Rate_Display'] = display_df['Close_Rate'].apply(lambda x: f"{x:.1f}%")
+            
+            # Add performance tier based on close rate
+            display_df['Performance_Tier'] = display_df['Rank'].apply(
+                lambda x: '🥇 Top Performer' if x <= len(display_df) * 0.3
+                else '🥈 Average Performer' if x <= len(display_df) * 0.6
+                else '🥉 Needs Improvement'
+            )
+            
+            # Select and reorder columns for display
+            display_cols = ['Rank', 'Carrier', 'Total_Quotes', 'Won_Quotes', 'Close_Rate_Display', 'Performance_Tier']
+            column_names = ['Rank', 'Carrier', 'Total Quotes', 'Won Quotes', 'Close Rate', 'Performance Tier']
+            
+            styled_df = display_df[display_cols].copy()
+            styled_df.columns = column_names
+            
+            st.dataframe(
+                styled_df,
+                use_container_width=True,
+                hide_index=True
+            )
+        
+        # Writing Carrier Summary
+        st.markdown("### 📈 Writing Carrier Summary (Policy Volume)")
+        
+        # Writing carrier performance from policy data
+        carrier_summary = policy_df.groupby('WritingCarrierName').agg({
+            'TotalPolicyPremium': ['count', 'sum', 'mean']
+        }).round(0)
+        
+        carrier_summary.columns = ['Policy_Count', 'Total_Premium', 'Average_Premium']
+        carrier_summary = carrier_summary.reset_index()
+        carrier_summary = carrier_summary.sort_values('Total_Premium', ascending=False)
+        carrier_summary['Rank'] = range(1, len(carrier_summary) + 1)
+        
+        # Add performance tier
+        total_carriers = len(carrier_summary)
+        carrier_summary['Performance_Tier'] = carrier_summary['Rank'].apply(
+            lambda x: '🥇 Top Volume' if x <= total_carriers * 0.3
+            else '🥈 Mid Volume' if x <= total_carriers * 0.6
+            else '🥉 Lower Volume'
+        )
+        
+        # Format premium columns
+        carrier_summary['Total_Premium'] = carrier_summary['Total_Premium'].apply(lambda x: f"${x:,.0f}")
+        carrier_summary['Average_Premium'] = carrier_summary['Average_Premium'].apply(lambda x: f"${x:,.0f}")
+        
+        display_cols = ['Rank', 'WritingCarrierName', 'Policy_Count', 'Total_Premium', 'Average_Premium', 'Performance_Tier']
+        column_names = ['Rank', 'Writing Carrier', 'Policy Count', 'Total Premium', 'Average Premium', 'Performance Tier']
+        
+        styled_df = carrier_summary[display_cols].copy()
+        styled_df.columns = column_names
+        
+        st.dataframe(
+            styled_df,
+            use_container_width=True,
+            hide_index=True
+        )
+    else:
+        if selected_producers:
+            st.info(f"No policy data available for selected producers: {', '.join(selected_producers)}")
+        else:
+            st.info("No policy data available for the selected period. Please select producers from the sidebar.")
+
+
+def create_producer_performance_tab(sf, filters):
+    """Create producer performance tab with optional producer filtering."""
+    st.markdown('<div class="section-header">Producer Performance</div>', unsafe_allow_html=True)
+
+    # Get insurance policy data with optional producer filtering
+    selected_producers = filters['selected_producers']
+    policy_df = get_insurance_policy_data(sf, filters['start_date'], filters['end_date'], selected_producers)
+
+    if not policy_df.empty:
+        # Producer Performance Summary
+        if selected_producers:
+            st.markdown(f"### 👨‍💼 Selected Producer Performance ({len(selected_producers)} producers)")
+        else:
+            st.markdown("### 👨‍💼 All Producer Performance")
+        
+        # Get producer performance data
+        producer_performance = policy_df.groupby('ProducerIdentifier').agg({
+            'TotalPolicyPremium': ['count', 'sum', 'mean'],
+            'PolicyType': 'nunique'
+        }).round(0)
+        
+        producer_performance.columns = ['Policies', 'Total_Premium', 'Avg_Premium', 'Policy_Types']
+        producer_performance = producer_performance.reset_index()
+        producer_performance = producer_performance.sort_values('Total_Premium', ascending=False)
+        producer_performance['Rank'] = range(1, len(producer_performance) + 1)
+        
+        # Add performance tier
+        total_producers = len(producer_performance)
+        producer_performance['Performance_Tier'] = producer_performance['Rank'].apply(
+            lambda x: '🥇 Top Producer' if x <= total_producers * 0.2
+            else '🥈 High Producer' if x <= total_producers * 0.4
+            else '🥉 Average Producer' if x <= total_producers * 0.6
+            else '📈 Developing Producer'
+        )
+        
+        # Format premium columns
+        producer_performance['Total_Premium'] = producer_performance['Total_Premium'].apply(lambda x: f"${x:,.0f}")
+        producer_performance['Avg_Premium'] = producer_performance['Avg_Premium'].apply(lambda x: f"${x:,.0f}")
+        
+        # Display the table
+        st.dataframe(
+            producer_performance,
+            use_container_width=True,
+            hide_index=True
+        )
+        
+        # Producer charts
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+            # Top 10 producers by premium
+            top_producers = policy_df.groupby('ProducerIdentifier')['TotalPolicyPremium'].sum().nlargest(10).reset_index()
+            
+            fig = px.bar(top_producers,
+                        x='TotalPolicyPremium',
+                        y='ProducerIdentifier',
+                        orientation='h',
+                        title="Top 10 Producers by Premium",
+                        color='TotalPolicyPremium',
+                        color_continuous_scale='Blues')
             fig.update_layout(
                 plot_bgcolor='rgba(0,0,0,0)',
                 paper_bgcolor='rgba(0,0,0,0)',
                 font_family="Inter",
                 title_font=dict(size=16, color='#111827'),
-                xaxis_title="Total Quotes",
-                yaxis_title="Close Rate (%)"
+                coloraxis_showscale=False,
+                xaxis_title="Total Premium ($)",
+                yaxis_title="Producer",
+                xaxis_tickformat='$,.0f'
             )
             st.plotly_chart(fig, use_container_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+        with col2:
+            st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+            # Policy type distribution
+            policy_type_dist = policy_df['PolicyType'].value_counts()
+            
+            title_suffix = f" (Selected Producers)" if selected_producers else " (All Producers)"
+            fig = px.pie(values=policy_type_dist.values,
+                        names=policy_type_dist.index,
+                        title=f"Policy Type Distribution{title_suffix}",
+                        color_discrete_sequence=px.colors.qualitative.Set3)
+            fig.update_layout(
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font_family="Inter",
+                title_font=dict(size=16, color='#111827')
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+    else:
+        if selected_producers:
+            st.info(f"No policy data available for selected producers: {', '.join(selected_producers)}")
         else:
-            st.info("No carrier performance data available for the selected period.")
-        st.markdown('</div>', unsafe_allow_html=True)
+            st.info("No policy data available for the selected period. Please select producers from the sidebar.")
 
-    # Enhanced carrier performance table
-    if not carrier_df.empty:
-        st.markdown("### 🏆 Carrier Performance Ranking")
-        
-        carrier_display = carrier_df.copy()
-        carrier_display['Close_Rate'] = carrier_display['Close_Rate'].round(1).astype(str) + '%'
-        carrier_display['Performance_Tier'] = carrier_display['Rank'].apply(
-            lambda x: '🥇 Top Tier' if x <= len(carrier_df) * 0.3 
-            else '🥈 Mid Tier' if x <= len(carrier_df) * 0.6 
-            else '🥉 Lower Tier'
-        )
-        
-        display_cols = ['Rank', 'Carrier', 'Total_Quotes', 'Won_Quotes', 'Close_Rate', 'Performance_Tier']
-        st.dataframe(
-            carrier_display[display_cols].sort_values('Rank'), 
-            use_container_width=True,
-            hide_index=True
-        )
-
-def create_producer_card(producer_name, producer_id, performance_data, internal_user_data=None):
-    """Create a modern producer card with account manager information."""
-    # Get initials for avatar
-    initials = ''.join([name[0].upper() for name in producer_name.split()[:2]])
-    
-    # Performance indicator
-    perf_level = performance_data['performance_level']
-    indicator_class = f"indicator-{perf_level}"
-    indicator_text = f"{perf_level.title()} Performer"
-    
-    # Internal user information
-    internal_user_info = ""
-    if internal_user_data and internal_user_data.get('internal_user_name', 'N/A') != 'N/A':
-        internal_user_info = f"""
-        
-        """
-    
-   
-
-def connect_sf_and_query(sf, start_date, end_date, new_business_only):
-    """Enhanced SF query with account manager tracking."""
-    try:
-        start_date_str = format_datetime_for_salesforce(start_date)
-        end_date_str = format_end_date_as_datetime_for_salesforce(end_date)
-        date_filter = f"CreatedDate >= {start_date_str} AND CreatedDate <= {end_date_str}"
-
-        if new_business_only:
-            new_business_filter = "AND New_Business_or_Renewal__c IN ('Personal Lines - New Business', 'Commercial Lines - New Business')"
-        else:
-            new_business_filter = ""
-
-        # Query with Account Manager (Producer field)
-        query_with_producer = f"""
-            SELECT Producer__c, Type, COUNT(Id) oppCount
-            FROM Opportunity
-            WHERE {date_filter} {new_business_filter} AND Producer__c != null
-            GROUP BY Producer__c, Type
-        """
-        results_with_prod = sf.query_all(query_with_producer)
-
-        # Query without producer (fallback to Owner)
-        query_without_producer = f"""
-            SELECT Owner.Name, Type, COUNT(Id) oppCount
-            FROM Opportunity
-            WHERE {date_filter} {new_business_filter} AND Producer__c = null
-            GROUP BY Owner.Name, Type
-        """
-        results_without_prod = sf.query_all(query_without_producer)
-
-        # Get account manager names with enhanced registry
-        producer_ids = {rec.get("Producer__c") for rec in results_with_prod["records"] if rec.get("Producer__c")}
-        producer_names = get_producer_names(sf, list(producer_ids))
-
-        producer_data = []
-
-        # Process results with account manager
-        for rec in results_with_prod["records"]:
-            prod_id = rec.get("Producer__c")
-            producer_name = producer_names.get(prod_id, "Account Manager Not Found")
-            picklist_val = rec.get("Type", "Other")
-            count_val = rec.get("oppCount", 0)
-            lob_category = map_lob(picklist_val)
-
-            # Get additional account manager info from registry
-            internal_user_name = "N/A"
-            internal_user_id = "N/A"
-            if 'producer_registry' in st.session_state:
-                registry = st.session_state.producer_registry
-                if prod_id in registry['id_mapping']:
-                    internal_user_name = registry['id_mapping'][prod_id].get('internal_user_name', 'N/A')
-                    internal_user_id = registry['id_mapping'][prod_id].get('internal_user_id', 'N/A')
-
-            producer_data.append({
-                "Producer": producer_name,
-                "Producer_ID": prod_id,
-                "Internal_User_Name": internal_user_name,
-                "Internal_User_ID": internal_user_id,
-                "Type": picklist_val,
-                "LOB_Category": lob_category,
-                "Count": count_val,
-                "Is_Account_Manager": True
-            })
-
-        # Process results without producer (Owner fallback)
-        for rec in results_without_prod["records"]:
-            owner = rec.get("Owner") or {}
-            producer_name = owner.get("Name", "Owner Not Provided")
-            picklist_val = rec.get("Type", "Other")
-            count_val = rec.get("oppCount", 0)
-            lob_category = map_lob(picklist_val)
-
-            producer_data.append({
-                "Producer": producer_name,
-                "Producer_ID": "N/A",
-                "Internal_User_Name": "N/A",
-                "Internal_User_ID": "N/A",
-                "Type": picklist_val,
-                "LOB_Category": lob_category,
-                "Count": count_val,
-                "Is_Account_Manager": False
-            })
-
-        return pd.DataFrame(producer_data)
-
-    except Exception as e:
-        st.error(f"Error querying producer data: {str(e)}")
-        return pd.DataFrame()
 
 # Main Dashboard
 def main():
     st.markdown('<h1 class="main-header">Insurance Analytics Dashboard</h1>', unsafe_allow_html=True)
 
-    # Enhanced sidebar with modern styling
-    filters = create_enhanced_sidebar()
-
-    # Auto-connect to Salesforce
+    # Auto-connect to Salesforce first
     sf = get_salesforce_connection()
 
     if sf is None:
         st.stop()
 
-    # Main dashboard layout with modern tabs
-    tab1, tab2, tab3 = st.tabs(["📊 Overview", "🎯 Performance", "👥 Producers"])
+    # Enhanced sidebar with modern styling (pass sf for producer list)
+    filters = create_enhanced_sidebar(sf)
 
-    with tab1:
+    # Create dynamic tabs based on selected producers
+    tab_names = ["📊 Overview", "🎯 Performance", "👥 Producer Performance"]
+    
+    # Add individual producer tabs if producers are selected
+    selected_producers = filters['selected_producers']
+    if selected_producers:
+        for producer in selected_producers:
+            tab_names.append(f"👤 {producer}")
+
+    # Create tabs dynamically
+    tabs = st.tabs(tab_names)
+
+    # Overview Tab
+    with tabs[0]:
         create_overview_tab(sf, filters)
 
-    with tab2:
+    # Performance Tab
+    with tabs[1]:
         create_performance_tab(sf, filters)
 
-    with tab3:
-        st.markdown('<div class="section-header">Producer Performance</div>', unsafe_allow_html=True)
+    # Producer Performance Tab
+    with tabs[2]:
+        create_producer_performance_tab(sf, filters)
 
-        # Get producer data
-        producer_df = connect_sf_and_query(sf, filters['start_date'], filters['end_date'], filters['new_business_only'])
+    # Individual Producer Tabs
+    if selected_producers:
+        for i, producer in enumerate(selected_producers, start=3):
+            with tabs[i]:
+                create_individual_producer_tab(sf, producer, filters)
 
-        if not producer_df.empty:
-            # Get unique producers
-            unique_producers = producer_df['Producer'].unique()
-            
-            # Create producer tabs
-            if len(unique_producers) > 0:
-                # Limit to top performers for tabs
-                producer_summary = producer_df.groupby('Producer')['Count'].sum().sort_values(ascending=False)
-                top_producers = producer_summary.head(filters['show_top_producers']).index.tolist()
-                
-                # Create tabs for top producers
-                producer_tabs = st.tabs([f"👤 {producer}" for producer in top_producers])
-                
-                for i, producer in enumerate(top_producers):
-                    with producer_tabs[i]:
-                        # Get producer ID and internal user data from registry
-                        producer_id = "N/A"
-                        internal_user_data = None
-                        
-                        if 'producer_registry' in st.session_state:
-                            registry = st.session_state.producer_registry
-                            if producer in registry['producers']:
-                                producer_info = registry['producers'][producer]
-                                producer_id = producer_info['id']
-                                internal_user_data = {
-                                    'internal_user_name': producer_info.get('internal_user_name', 'N/A'),
-                                    'internal_user_id': producer_info.get('internal_user_id', 'N/A'),
-                                    'first_name': producer_info.get('first_name', ''),
-                                    'last_name': producer_info.get('last_name', '')
-                                }
-                        
-                        # Get performance data
-                        performance_data = get_producer_performance_summary(producer_df, producer)
-                        
-                        # Display enhanced producer card with account manager info
-                        st.markdown(create_producer_card(producer, producer_id, performance_data, internal_user_data), unsafe_allow_html=True)
-                        
-                        # Producer-specific charts
-                        producer_data = producer_df[producer_df['Producer'] == producer]
-                        
-                        col1, col2 = st.columns(2)
-                        
-                        with col1:
-                            # LOB breakdown for this producer
-                            lob_breakdown = producer_data.groupby('LOB_Category')['Count'].sum()
-                            if not lob_breakdown.empty:
-                                fig = px.pie(values=lob_breakdown.values, 
-                                           names=lob_breakdown.index,
-                                           title=f"{producer}'s LOB Distribution",
-                                           color_discrete_sequence=px.colors.qualitative.Set3)
-                                fig.update_layout(
-                                    plot_bgcolor='rgba(0,0,0,0)',
-                                    paper_bgcolor='rgba(0,0,0,0)',
-                                    font_family="Inter",
-                                    title_font=dict(size=14, color='#111827')
-                                )
-                                st.plotly_chart(fig, use_container_width=True)
-                        
-                        with col2:
-                            # Performance by type
-                            type_breakdown = producer_data.groupby('Type')['Count'].sum()
-                            if not type_breakdown.empty:
-                                fig = px.bar(x=type_breakdown.index, 
-                                           y=type_breakdown.values,
-                                           title=f"{producer}'s Performance by Type",
-                                           color=type_breakdown.values,
-                                           color_continuous_scale='Viridis')
-                                fig.update_layout(
-                                    plot_bgcolor='rgba(0,0,0,0)',
-                                    paper_bgcolor='rgba(0,0,0,0)',
-                                    font_family="Inter",
-                                    title_font=dict(size=14, color='#111827'),
-                                    coloraxis_showscale=False,
-                                    xaxis_title="Business Type",
-                                    yaxis_title="Count"
-                                )
-                                st.plotly_chart(fig, use_container_width=True)
-
-            # Enhanced producer summary table with account manager info
-            st.markdown("### 📈 Account Manager Performance Summary")
-            
-            # Create enhanced summary with internal user information
-            producer_detail = producer_df.pivot_table(
-                values='Count', 
-                index=['Producer', 'Producer_ID', 'Internal_User_Name', 'Is_Account_Manager'],
-                columns='LOB_Category', 
-                fill_value=0, 
-                aggfunc='sum'
-            )
-            producer_detail['Total'] = producer_detail.sum(axis=1)
-            producer_detail = producer_detail.sort_values('Total', ascending=False)
-            
-            # Reset index to show all columns
-            producer_detail_display = producer_detail.reset_index()
-            
-            # Rename columns for better display
-            display_columns = {
-                'Producer': 'Account Manager Name',
-                'Producer_ID': 'Account Manager ID', 
-                'Internal_User_Name': 'Internal User',
-                'Is_Account_Manager': 'Type'
-            }
-            producer_detail_display = producer_detail_display.rename(columns=display_columns)
-            
-            # Format the Type column
-            producer_detail_display['Type'] = producer_detail_display['Type'].apply(
-                lambda x: 'Account Manager' if x else 'Owner Fallback'
-            )
-            
-            st.dataframe(producer_detail_display, use_container_width=True, hide_index=True)
-            
-            # Enhanced Producer Registry Status
-            if 'producer_registry' in st.session_state:
-                registry = st.session_state.producer_registry
-                account_managers_count = sum(1 for p in registry['producers'].values() if p.get('is_account_manager', False))
-                
-                col1, col2, col3 = st.columns(3)
-                
-                with col1:
-                    st.markdown(f"""
-                    <div class="metric-card">
-                        <h3 style="margin: 0; font-size: 1.8rem; color: #6366f1;">{len(registry['producers'])}</h3>
-                        <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-weight: 500;">Total Producers Tracked</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                with col2:
-                    st.markdown(f"""
-                    <div class="metric-card">
-                        <h3 style="margin: 0; font-size: 1.8rem; color: #10b981;">{account_managers_count}</h3>
-                        <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-weight: 500;">Account Managers</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                with col3:
-                    st.markdown(f"""
-                    <div class="metric-card">
-                        <h3 style="margin: 0; font-size: 1.8rem; color: #f59e0b;">{len(registry['id_mapping'])}</h3>
-                        <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-weight: 500;">ID Mappings</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                st.markdown(f"""
-                **Registry Last Updated**: {registry['last_updated'].strftime('%Y-%m-%d %H:%M:%S')}
-                """)
-        else:
-            st.info("No account manager data available for the selected period.")
 
 if __name__ == "__main__":
     main()
+
+
